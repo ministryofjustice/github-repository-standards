@@ -30,14 +30,14 @@ params = {
   github_token: ENV.fetch("GITHUB_TOKEN")
 }
 
-repositories = RepositoryLister.new(params)
+pp repositories = RepositoryLister.new(params)
   .repository_names
-  .inject([]) do |arr, repo_name|
-    report = RepositoryReport.new(params.merge(repo_name: repo_name)).report
-    arr << report
-end
-
-puts({
-  repositories: repositories,
-  updated_at: Time.now
-}.to_json)
+#   .inject([]) do |arr, repo_name|
+#     report = RepositoryReport.new(params.merge(repo_name: repo_name)).report
+#     arr << report
+# end
+#
+# puts({
+#   repositories: repositories,
+#   updated_at: Time.now
+# }.to_json)

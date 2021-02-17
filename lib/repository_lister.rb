@@ -30,6 +30,7 @@ class RepositoryLister < GithubGraphQlClient
 
     data = get_repos(end_cursor)
     repos = repos + data.fetch("nodes")
+    pp repos
     next_page = data.dig("pageInfo", "hasNextPage")
     end_cursor = data.dig("pageInfo", "endCursor")
 
