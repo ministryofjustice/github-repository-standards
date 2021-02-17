@@ -5,7 +5,7 @@ RUN gem install bundler
 
 WORKDIR /app
 
-COPY Gemfile* .
+COPY Gemfile* ./
 
 RUN bundle config set without "development test"
 RUN bundle install
