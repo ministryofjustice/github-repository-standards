@@ -21,8 +21,6 @@ class GithubGraphQlClient
     list
   end
 
-  private
-
   def run_query(body)
     json = {query: body}.to_json
     headers = {"Authorization" => "bearer #{github_token}"}
