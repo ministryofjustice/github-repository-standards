@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
       - run: bundle config set without "development test"
       - run: bundle install
       - run: bin/post-data.sh
