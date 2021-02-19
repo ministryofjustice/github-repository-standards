@@ -10,9 +10,24 @@ Engineering Reports] web application.
 [standards]: https://ministryofjustice.github.io/technical-guidance/#building-software
 [Operations Engineering Reports]: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/
 
+## Running the report
+
+The report is scheduled to run daily, via a GitHub Actions workflow.
+
+You can also trigger it manually via the "Run workflow" button [here](https://github.com/ministryofjustice/github-repository-standards/actions/workflows/post-report-data.yml).
+
+The ruby code is run directly via the GitHub Actions workflow - there is no
+docker image or other build steps.
+
+## Architecture
+
+* A GraphQL query retrieves information about MoJ public GitHub repositories
+* Data for each repository is used to instantiate a `StandardsReport` object
+* Code in `StandardsReport` creates a report based on the data supplied
+
 ## Public repositories should:
 
-* be MIT Licensed
+* be MIT Licensed (not implemented yet)
 * have `main` as the default branch
 * have at least one team with admin access (not implemented yet)
 * delete branch on merge (not implemented yet)
