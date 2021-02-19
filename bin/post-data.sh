@@ -1,10 +1,10 @@
 #!/bin/sh
 
-cloud-platform-repository-checker > repositories.json
+bin/repository-checker > repositories.json
 
 curl \
   --http1.1 \
   -H "Content-Type: application/json" \
-  -H "X-API-KEY: ${HOODAW_API_KEY}" \
+  -H "X-API-KEY: ${OPERATIONS_ENGINEERING_REPORTS_API_KEY}" \
   -d @repositories.json \
-  ${HOODAW_HOST}/repositories
+  ${OPERATIONS_ENGINEERING_REPORTS_HOST}/github_repositories

@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "net/http"
+require "uri"
+require "octokit"
+require "time"
+
+require_relative "../lib/github_graph_ql_client"
+require_relative "../lib/repositories"
+require_relative "../lib/standards_report"
+
+graphql = GithubGraphQlClient.new(github_token: ENV.fetch("ADMIN_GITHUB_TOKEN"))
+
+results = Repositories.new(graphql: graphql).list.map { |hash| StandardsReport.new(hash).report }
+
+puts({
+  data: results,
+  updated_at: Time.now
+}.to_json)
