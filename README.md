@@ -38,3 +38,4 @@ docker image or other build steps.
     "requiresApprovingReviews": true,
     "requiresCodeOwnerReviews": true,
     "isAdminEnforced": true,
+* have Dependabot enabled (not implemented yet)
