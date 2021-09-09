@@ -35,11 +35,7 @@ class Repositories
     after = end_cursor.nil? ? "" : %[, after: "#{end_cursor}"]
     %[
 {
-  search(type: REPOSITORY, query: """
-    org:ministryofjustice
-    is:public
-    archived:false
-  """, first: #{PAGE_SIZE} #{after}) {
+  search(type: REPOSITORY, query: "org:ministryofjustice, is:public, archived:false", first: #{PAGE_SIZE} #{after}) {
     repos: edges {
       repo: node {
         ... on Repository {
