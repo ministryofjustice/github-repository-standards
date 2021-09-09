@@ -3,12 +3,17 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "17 5 * * *"
+  push:
+    branches:
+    - report_fix
 
 jobs:
   post-data-to-opseng-reports:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
+        with:
+          ref: report_fix
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.7'
