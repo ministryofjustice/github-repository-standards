@@ -57,7 +57,7 @@ class StandardsReport
   def all_checks_result
     @all_checks_result ||= {
       default_branch_main: default_branch_main?,
-      has_main_branch_protection: has_main_branch_protection?,
+      has_default_branch_protection: has_default_branch_protection?,
       requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
       administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
       # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
@@ -68,6 +68,7 @@ class StandardsReport
     repo_data.dig("repo", "defaultBranchRef", "name")
   end
 
+  # Doesn't currently run
   def is_team_admin?
     client = Octokit::Client.new(access_token: github_token)
 
@@ -87,10 +88,11 @@ class StandardsReport
     default_branch == MAIN_BRANCH
   end
 
-  def has_main_branch_protection?
+  # Checks if default branch has branch protection rules
+  def has_default_branch_protection?
     requiring_branch_protection_rules do |rules|
       rules
-        .select { |edge| edge.dig("node", "pattern") == MAIN_BRANCH }
+        .select { |edge| edge.dig("node", "pattern") == default_branch }
         .any?
     end
   end
