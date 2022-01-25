@@ -32,7 +32,7 @@ docker image or other build steps.
 * have at least one team with admin access (not implemented yet)
 * delete branch on merge (not implemented yet)
 * have non-empty description (shouldn't be null or "") (not implemented yet)
-* have issues enabled (not implemented yet)
+* have issues enabled
 * have recent activity (pushedAt < ?) (not implemented yet)
 * have branch protection on `main`, with:
     "requiresApprovingReviews": true,

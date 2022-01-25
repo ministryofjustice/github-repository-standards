@@ -31,7 +31,8 @@ class StandardsReport
       url: repo_url,
       status: status,
       last_push: last_push,
-      report: all_checks_result
+      report: all_checks_result,
+      issues_enabled: issues_enabled
     }
   end
 
@@ -59,9 +60,18 @@ class StandardsReport
       default_branch_main: default_branch_main?,
       has_default_branch_protection: has_default_branch_protection?,
       requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
-      administrators_require_review: has_branch_protection_property?("isAdminEnforced")
+      administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
+      issues_section_enabled: has_issues_enabled?
       # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
     }
+  end
+
+  def issues_enabled
+    repo_data.dig("repo", "hasIssuesEnabled")
+  end
+
+  def has_issues_enabled?
+    issues_enabled == true
   end
 
   def default_branch
