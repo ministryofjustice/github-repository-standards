@@ -12,7 +12,7 @@ class GithubRepositoryStandards
 
     def create_issue
       if issue_already_exists.empty?
-        puts "Create issue in repository: #{repository}"
+        File.open("output.txt", 'a') { |file| file.write("Create issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
         HttpClient.new.post_json(url, issue_hash.to_json)
         sleep 5
