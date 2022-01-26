@@ -21,7 +21,6 @@ class StandardsReport
 
   # TODO: additional checks
   #   * MIT License
-  #   * has issues enabled
   #   * deleteBranchOnMerge
   #   * There is a team with admin privileges on the repo
   def report
@@ -61,7 +60,8 @@ class StandardsReport
       has_default_branch_protection: has_default_branch_protection?,
       requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
       administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
-      issues_section_enabled: has_issues_enabled?
+      issues_section_enabled: has_issues_enabled?,
+      requires_codeowner_review: has_branch_protection_property?("requiresCodeOwnerReviews")
       # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
     }
   end
