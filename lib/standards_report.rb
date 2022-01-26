@@ -61,7 +61,7 @@ class StandardsReport
       requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
       administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
       issues_section_enabled: has_issues_enabled?,
-      requires_codeowner_review: has_branch_protection_property?("requiresCodeOwnerReviews")
+      requires_code_owner_reviews: has_branch_protection_property?("requiresCodeOwnerReviews")
       # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
     }
   end

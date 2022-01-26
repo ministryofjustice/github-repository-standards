@@ -16,17 +16,32 @@ graphql = GithubGraphQlClient.new(github_token: ENV.fetch("ADMIN_GITHUB_TOKEN"))
 results = Repositories.new(graphql: graphql).list.map { |hash| StandardsReport.new(hash).report }
 
 results.each do |x|
-    if x[:issues_enabled] == false
-        # Log a repository has the Issues section turned off
-        File.open("output.txt", "a") { |file| file.write("Issues disabled in repository: #{x[:name]} \n") }
-    elsif x[:default_branch] != "main"
-        # Create a repository issue if the repository default branch is not set to main
-        params = {
-            owner: "ministryofjustice",
-            repository: x[:name],
-            github_user: "ministryofjustice"
-        }
-        GithubRepositoryStandards::IssueCreator.new(params).create_issue
+    params = {
+        owner: "ministryofjustice",
+        repository: x[:name],
+        github_user: "ministryofjustice"
+    }
+
+    if x[:issues_enabled] == true
+        if x[:default_branch] != "main"
+            # Create a default branch issue if the repository default branch is not set to main
+            GithubRepositoryStandards::IssueCreator.new(params).create_default_branch_issue
+        end
+
+        if x[:report][:requires_approving_reviews] == false
+            # Create a requires approving review issue if the repository does not have it enabled
+            GithubRepositoryStandards::IssueCreator.new(params).create_requires_approving_reviews_issue
+        end
+
+        if x[:report][:administrators_require_review] == false
+            # Create a administrators require review issue if the repository does not have it enabled
+            GithubRepositoryStandards::IssueCreator.new(params).create_administrators_require_review_issue
+        end
+
+        if x[:report][:requires_codeowner_review] == false
+            # Create a requires codeowner review issue if the repository does not have it enabled
+            GithubRepositoryStandards::IssueCreator.new(params).create_requires_codeowner_review_issue
+        end
     end
 end
 
