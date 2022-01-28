@@ -35,7 +35,8 @@ docker image or other build steps.
 * have issues enabled
 * have recent activity (pushedAt < ?) (not implemented yet)
 * have branch protection on `main`, with:
-    "requiresApprovingReviews": true,
-    "requiresCodeOwnerReviews": true,
-    "isAdminEnforced": true,
+    1. Require a pull request before merging
+    2. Require approvals option and a minimum number of user to approve the pull request.
+    3. Require review from Code Owners option
+    4. Include administrators option
 * have Dependabot enabled (not implemented yet)
