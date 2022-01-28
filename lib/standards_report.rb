@@ -111,13 +111,9 @@ class StandardsReport
   def has_approval_count_enabled
     approval_count = repo_data.dig("repo", "branchProtectionRules", "edges", 0, "node", "requiredApprovingReviewCount")
     if defined?(approval_count)
-      if approval_count == 0
-        return false
-      else
-        return true
-      end
+      !(approval_count == 0)
     else
-      return false
+      false
     end
   end
 
