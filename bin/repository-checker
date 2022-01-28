@@ -24,24 +24,24 @@ results.each do |x|
 
     if x[:issues_enabled] == true
         if x[:default_branch] != "main"
-            # Create a default branch issue if the repository default branch is not set to main
             GithubRepositoryStandards::IssueCreator.new(params).create_default_branch_issue
         end
 
         if x[:report][:requires_approving_reviews] == false
-            # Create a requires approving review issue if the repository does not have it enabled
             GithubRepositoryStandards::IssueCreator.new(params).create_requires_approving_reviews_issue
         end
 
         if x[:report][:administrators_require_review] == false
-            # Create a administrators require review issue if the repository does not have it enabled
-            GithubRepositoryStandards::IssueCreator.new(params).create_administrators_require_review_issue
+            GithubRepositoryStandards::IssueCreator.new(params).create_include_administrators_issue
         end
 
-        if x[:report][:requires_codeowner_review] == false
-            # Create a requires codeowner review issue if the repository does not have it enabled
-            GithubRepositoryStandards::IssueCreator.new(params).create_requires_codeowner_review_issue
+        if x[:report][:requires_code_owner_reviews] == false
+            GithubRepositoryStandards::IssueCreator.new(params).create_requires_codeowner_reviews_issue
         end
+
+        if x[:report][:has_require_approvals_enabled] == false
+            GithubRepositoryStandards::IssueCreator.new(params).create_require_approvals_issue
+        end   
     end
 end
 

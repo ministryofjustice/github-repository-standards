@@ -61,7 +61,8 @@ class StandardsReport
       requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
       administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
       issues_section_enabled: has_issues_enabled?,
-      requires_code_owner_reviews: has_branch_protection_property?("requiresCodeOwnerReviews")
+      requires_code_owner_reviews: has_branch_protection_property?("requiresCodeOwnerReviews"),
+      has_require_approvals_enabled: has_approval_count_enabled
       # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
     }
   end
@@ -104,6 +105,19 @@ class StandardsReport
       rules
         .select { |edge| edge.dig("node", "pattern") == default_branch }
         .any?
+    end
+  end
+
+  def has_approval_count_enabled
+    approval_count = repo_data.dig("repo", "branchProtectionRules", "edges", 0, "node", "requiredApprovingReviewCount")
+    if defined?(approval_count)
+      if approval_count == 0
+        return false
+      else
+        return true
+      end
+    else
+      return false
     end
   end
 

@@ -28,20 +28,29 @@ class GithubRepositoryStandards
       end
     end
 
-    def create_administrators_require_review_issue
-      if issue_already_exists("A branch protection setting is not enabled: administrators require review").empty?
-        File.open("output.txt", "a") { |file| file.write("Create administrators require review issue in repository: #{repository} \n") }
+    def create_include_administrators_issue
+      if issue_already_exists("A branch protection setting is not enabled: Include administrators").empty?
+        File.open("output.txt", "a") { |file| file.write("Create Include administrators issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
-        HttpClient.new.post_json(url, administrators_require_review_issue_hash.to_json)
+        HttpClient.new.post_json(url, include_administrators_issue_hash.to_json)
         sleep 5
       end
     end
 
-    def create_requires_codeowner_review_issue
-      if issue_already_exists("A branch protection setting is not enabled: codeowners require review").empty?
-        File.open("output.txt", "a") { |file| file.write("Create codeowners require review issue in repository: #{repository} \n") }
+    def create_requires_codeowner_reviews_issue
+      if issue_already_exists("A branch protection setting is not enabled: codeowners require reviews").empty?
+        File.open("output.txt", "a") { |file| file.write("Create codeowners require reviews issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
-        HttpClient.new.post_json(url, requires_codeowner_review_issue_hash.to_json)
+        HttpClient.new.post_json(url, requires_codeowner_reviews_issue_hash.to_json)
+        sleep 5
+      end
+    end
+
+    def create_require_approvals_issue
+      if issue_already_exists("A branch protection setting is not enabled: Require approvals").empty?
+        File.open("output.txt", "a") { |file| file.write("Create Require approvals issue in repository: #{repository} \n") }
+        url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
+        HttpClient.new.post_json(url, require_approvals_issue_hash.to_json)
         sleep 5
       end
     end
@@ -98,6 +107,7 @@ class GithubRepositoryStandards
           The default branch protection setting called requires approving reviews is not enabled for this repository
           See repository settings/Branches/Branch protection rules
           Either add a new Branch protection rule or edit the existing branch protection rule and select the Require approvals option
+          This will require another persons approval on a pull request before it can be merged
           See the repository standards: https://github.com/ministryofjustice/github-repository-standards
           See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
           Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
@@ -105,15 +115,16 @@ class GithubRepositoryStandards
       }
     end
 
-    def administrators_require_review_issue_hash
+    def include_administrators_issue_hash
       {
-        title: "A branch protection setting is not enabled: administrators require review",
+        title: "A branch protection setting is not enabled: Include administrators",
         assignees: [github_user],
         body: <<~EOF
           Hi there
-          The default branch protection setting called administrators require review is not enabled for this repository
+          The default branch protection setting called Include administrators is not enabled for this repository
           See repository settings/Branches/Branch protection rules
-          Either add a new Branch protection rule or edit the existing branch protection rule and select the Require a pull request before merging option
+          Either add a new Branch protection rule or edit the existing branch protection rule and select the Include administrators option
+          This will enable the branch protection rules to admin uses as well
           See the repository standards: https://github.com/ministryofjustice/github-repository-standards
           See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
           Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
@@ -121,9 +132,9 @@ class GithubRepositoryStandards
       }
     end
 
-    def requires_codeowner_review_issue_hash
+    def requires_codeowner_reviews_issue_hash
       {
-        title: "A branch protection setting is not enabled: codeowners require review",
+        title: "A branch protection setting is not enabled: codeowners require reviews",
         assignees: [github_user],
         body: <<~EOF
           Hi there
@@ -132,9 +143,25 @@ class GithubRepositoryStandards
           See repository settings/Branches/Branch protection rules
           Either add a new Branch protection rule or edit the existing branch protection rule and select the Require review from Code Owners option
           Create a .github/CODEOWNERS file
-          Add @ministryofjustice/team_name to the CODEOWNERS file
+          Add a or multiple entries of @ministryofjustice/team_name to the CODEOWNERS file
           The team_name shall be a team from within the MoJ teams: https://github.com/orgs/ministryofjustice/teams         
           See GH Codeowners documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+          See the repository standards: https://github.com/ministryofjustice/github-repository-standards
+          See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
+          Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
+        EOF
+      }
+    end
+
+    def require_approvals_issue_hash
+      {
+        title: "A branch protection setting is not enabled: Require approvals",
+        assignees: [github_user],
+        body: <<~EOF
+          Hi there
+          The default branch protection setting called Require approvals is not enabled for this repository
+          See repository settings/Branches/Branch protection rules
+          Either add a new Branch protection rule or edit the existing branch protection rule and select the Require approvals option and select a minimum number of users to approve the pull request
           See the repository standards: https://github.com/ministryofjustice/github-repository-standards
           See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
           Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
