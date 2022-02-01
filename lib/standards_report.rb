@@ -68,11 +68,11 @@ class StandardsReport
           default_branch_main: default_branch_main?,
           has_default_branch_protection: has_default_branch_protection?(branchProtectionRule),
           requires_approving_reviews: has_branch_protection_property?(branchProtectionRule, "requiresApprovingReviews"),
-          administrators_require_review: has_branch_protection_property?(branchProtectionRule,"isAdminEnforced"),
+          administrators_require_review: has_branch_protection_property?(branchProtectionRule, "isAdminEnforced"),
           issues_section_enabled: has_issues_enabled?,
-          requires_code_owner_reviews: has_branch_protection_property?(branchProtectionRule,"requiresCodeOwnerReviews"),
+          requires_code_owner_reviews: has_branch_protection_property?(branchProtectionRule, "requiresCodeOwnerReviews"),
           has_require_approvals_enabled: has_required_appproving_review_count?(branchProtectionRule)
-        } 
+        }
       end
     }
     if mainExists == false
@@ -86,7 +86,7 @@ class StandardsReport
         has_require_approvals_enabled: true
       }
     end
-    return result
+    result
   end
 
   def issues_enabled
@@ -111,11 +111,7 @@ class StandardsReport
 
   def has_default_branch_protection?(branchProtectionRule)
     pattern = branchProtectionRule.dig("node", "pattern")
-    if pattern == default_branch
-      true
-    else
-      false
-    end
+    pattern == default_branch
   end
 
   def has_required_appproving_review_count?(branchProtectionRule)
@@ -123,16 +119,11 @@ class StandardsReport
     if approval_count.nil?
       false
     else
-      if approval_count > 0
-        true
-      else
-        false
-      end
+      approval_count > 0
     end
   end
 
   def has_branch_protection_property?(branchProtectionRule, property)
     result = branchProtectionRule.dig("node", property)
   end
-
 end
