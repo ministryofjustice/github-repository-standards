@@ -23,7 +23,7 @@ results.each do |x|
     }
 
     if x[:issues_enabled] == true
-        if x[:default_branch] != "main"
+        if x[:report][:default_branch_main] == false
             GithubRepositoryStandards::IssueCreator.new(params).create_default_branch_issue
         end
 
@@ -41,7 +41,7 @@ results.each do |x|
 
         if x[:report][:has_require_approvals_enabled] == false
             GithubRepositoryStandards::IssueCreator.new(params).create_require_approvals_issue
-        end   
+        end 
     end
 end
 

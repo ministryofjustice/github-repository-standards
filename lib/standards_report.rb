@@ -54,17 +54,39 @@ class StandardsReport
     t.nil? ? nil : Date.parse(t)
   end
 
+  def branchProtectionRules
+    repo_data.dig("repo", "branchProtectionRules", "edges")
+  end
+
   def all_checks_result
-    @all_checks_result ||= {
-      default_branch_main: default_branch_main?,
-      has_default_branch_protection: has_default_branch_protection?,
-      requires_approving_reviews: has_branch_protection_property?("requiresApprovingReviews"),
-      administrators_require_review: has_branch_protection_property?("isAdminEnforced"),
-      issues_section_enabled: has_issues_enabled?,
-      requires_code_owner_reviews: has_branch_protection_property?("requiresCodeOwnerReviews"),
-      has_require_approvals_enabled: has_approval_count_enabled
-      # team_is_admin: is_team_admin?, # TODO: implement this, but pass if *any* team has admin rights.
+    result = false
+    mainExists = false
+    branchProtectionRules.each { |branchProtectionRule|
+      if branchProtectionRule.dig("node", "pattern") == "main"
+        mainExists = true
+        result ||= {
+          default_branch_main: default_branch_main?,
+          has_default_branch_protection: has_default_branch_protection?(branchProtectionRule),
+          requires_approving_reviews: has_branch_protection_property?(branchProtectionRule, "requiresApprovingReviews"),
+          administrators_require_review: has_branch_protection_property?(branchProtectionRule,"isAdminEnforced"),
+          issues_section_enabled: has_issues_enabled?,
+          requires_code_owner_reviews: has_branch_protection_property?(branchProtectionRule,"requiresCodeOwnerReviews"),
+          has_require_approvals_enabled: has_required_appproving_review_count?(branchProtectionRule)
+        } 
+      end
     }
+    if mainExists == false
+      result ||= {
+        default_branch_main: false,
+        has_default_branch_protection: true,
+        requires_approving_reviews: true,
+        administrators_require_review: true,
+        issues_section_enabled: true,
+        requires_code_owner_reviews: true,
+        has_require_approvals_enabled: true
+      }
+    end
+    return result
   end
 
   def issues_enabled
@@ -79,18 +101,6 @@ class StandardsReport
     repo_data.dig("repo", "defaultBranchRef", "name")
   end
 
-  # Doesn't currently run
-  def is_team_admin?
-    client = Octokit::Client.new(access_token: github_token)
-
-    client.repo_teams([organization, repo_name].join("/")).select do |t|
-      t[:name] == team && t[:permission] == ADMIN
-    end.any?
-  rescue Octokit::NotFound
-    # This happens if our token does not have permission to view repo settings
-    false
-  end
-
   def branch_protection_rules
     @rules ||= repo_data.dig("repo", "branchProtectionRules", "edges")
   end
@@ -99,36 +109,30 @@ class StandardsReport
     default_branch == MAIN_BRANCH
   end
 
-  # Checks if default branch has branch protection rules
-  def has_default_branch_protection?
-    requiring_branch_protection_rules do |rules|
-      rules
-        .select { |edge| edge.dig("node", "pattern") == default_branch }
-        .any?
-    end
-  end
-
-  def has_approval_count_enabled
-    approval_count = repo_data.dig("repo", "branchProtectionRules", "edges", 0, "node", "requiredApprovingReviewCount")
-    if defined?(approval_count)
-      !(approval_count == 0)
+  def has_default_branch_protection?(branchProtectionRule)
+    pattern = branchProtectionRule.dig("node", "pattern")
+    if pattern == default_branch
+      true
     else
       false
     end
   end
 
-  def has_branch_protection_property?(property)
-    requiring_branch_protection_rules do |rules|
-      rules
-        .map { |edge| edge.dig("node", property) }
-        .all?
+  def has_required_appproving_review_count?(branchProtectionRule)
+    approval_count = branchProtectionRule.dig("node", "requiredApprovingReviewCount")
+    if approval_count.nil?
+      false
+    else
+      if approval_count > 0
+        true
+      else
+        false
+      end
     end
   end
 
-  def requiring_branch_protection_rules
-    rules = branch_protection_rules
-    return false unless rules.any?
-
-    yield rules
+  def has_branch_protection_property?(branchProtectionRule, property)
+    result = branchProtectionRule.dig("node", property)
   end
+
 end
