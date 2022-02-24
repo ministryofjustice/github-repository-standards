@@ -1,8 +1,8 @@
 name: Post repositories JSON
 on:
   workflow_dispatch:
-#   schedule:
-#     - cron: "17 5 * * *"
+  schedule:
+    - cron: "17 5 * * *"
 
 jobs:
   post-data-to-opseng-reports:
