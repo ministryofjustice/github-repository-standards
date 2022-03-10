@@ -3,7 +3,6 @@
 require "json"
 require "net/http"
 require "uri"
-require "octokit"
 require "time"
 
 require_relative "../lib/github_graph_ql_client"
