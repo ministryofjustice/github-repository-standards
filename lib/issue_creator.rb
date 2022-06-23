@@ -3,14 +3,14 @@ require_relative "http_client"
 class GithubRepositoryStandards
   class IssueCreator
     attr_reader :owner, :repository, :github_user
-
+      
     def initialize(params)
-      @owner = params.fetch(:owner)
+      @owner = params.fetch(:owner)       
       @repository = params.fetch(:repository)
       @github_user = params.fetch(:github_user)
     end
 
-    def create_default_branch_issue
+    def create_default_branch_issue       
       if issue_already_exists("Default branch is not main").empty?
         File.open("output.txt", "a") { |file| file.write("Create default branch issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
