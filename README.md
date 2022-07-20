@@ -31,14 +31,10 @@ docker image or other build steps.
 
 * be MIT Licensed (not implemented yet)
 * have `main` as the default branch
-* have at least one team with admin access (not implemented yet)
-* delete branch on merge (not implemented yet)
 * have non-empty description (shouldn't be null or "") (not implemented yet)
 * have issues enabled
-* have recent activity (pushedAt < ?) (not implemented yet)
 * have branch protection on `main`, with:
     1. Require a pull request before merging
     2. Require approvals option and a minimum number of user to approve the pull request.
     3. Require review from Code Owners option
     4. Include administrators option
-* have Dependabot enabled (not implemented yet)

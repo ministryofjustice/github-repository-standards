@@ -21,8 +21,7 @@ class StandardsReport
 
   # TODO: additional checks
   #   * MIT License
-  #   * deleteBranchOnMerge
-  #   * There is a team with admin privileges on the repo
+  #   * have non-empty description
   def report
     {
       name: repo_name,

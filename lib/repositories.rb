@@ -45,9 +45,7 @@ class Repositories
           isDisabled
           isLocked
           hasIssuesEnabled
-          deleteBranchOnMerge
           pushedAt
-          updatedAt
           defaultBranchRef {
             name
           }
@@ -58,18 +56,11 @@ class Repositories
           branchProtectionRules(first: 10) {
             edges {
               node {
-                dismissesStaleReviews            # Dismiss stale pull request approvals when new commits are pushed
                 isAdminEnforced                  # Include administrators
                 pattern                          # should be set to main
                 requiredApprovingReviewCount     # Require approvals > 0
-                requiredStatusCheckContexts      # Would apply to a .yml file I believe ie "terraform-plan"
                 requiresApprovingReviews         # Require a pull request before merging
                 requiresCodeOwnerReviews         # Require review from Code Owners
-                requiresCommitSignatures         # Require signed commits
-                requiresConversationResolution   # Require conversation resolution before merging
-                requiresLinearHistory            # Require linear history
-                requiresStrictStatusChecks       # Require branches to be up to date before merging
-                requiresStatusChecks             # Require status checks to pass before merging
               }
             }
           }
