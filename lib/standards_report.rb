@@ -53,14 +53,14 @@ class StandardsReport
     t.nil? ? nil : Date.parse(t)
   end
 
-  def branch_protection_rules
+  def get_branch_protection_rules
     repo_data.dig("repo", "branchProtectionRules", "edges")
   end
 
   def all_checks_result
     result = false
     main_exists = false
-    branch_protection_rule.each { |branch_protection_rule|
+    get_branch_protection_rules.each { |branch_protection_rule|
       if branch_protection_rule.dig("node", "pattern") == "main"
         main_exists = true
         result ||= {
