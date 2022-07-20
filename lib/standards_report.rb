@@ -1,12 +1,5 @@
 # Given a hash of data representing a repository, analyse it to see whether it
 # complies with our standards, and report any violations.
-#
-# This should really be done via conftest, but I don't think I've got time to
-# implement it that way.
-#
-# Also, an important check is whether any team, rather than an individual, has
-# admin permissions on the repository. This information is not currently
-# available via the GitHub GraphQL API.
 class StandardsReport
   attr_reader :repo_data
 
@@ -69,7 +62,6 @@ class StandardsReport
           requires_approving_reviews: has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews"),
           administrators_require_review: has_branch_protection_property?(branch_protection_rule, "isAdminEnforced"),
           issues_section_enabled: has_issues_enabled?,
-          requires_code_owner_reviews: has_branch_protection_property?(branch_protection_rule, "requiresCodeOwnerReviews"),
           has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule)
         }
       end
@@ -81,7 +73,6 @@ class StandardsReport
         requires_approving_reviews: true,
         administrators_require_review: true,
         issues_section_enabled: true,
-        requires_code_owner_reviews: true,
         has_require_approvals_enabled: true
       }
     end

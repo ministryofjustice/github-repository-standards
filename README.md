@@ -36,5 +36,4 @@ docker image or other build steps.
 - have branch protection on `main`, with:
   1. Require a pull request before merging
   2. Require approvals option and a minimum number of user to approve the pull request.
-  3. Require review from Code Owners option
-  4. Include administrators option
+  3. Include administrators option

@@ -34,10 +34,6 @@ results = Repositories.new(graphql: graphql).list.map { |hash| StandardsReport.n
 #             GithubRepositoryStandards::IssueCreator.new(params).create_include_administrators_issue
 #         end
 
-#         if x[:report][:requires_code_owner_reviews] == false
-#             GithubRepositoryStandards::IssueCreator.new(params).create_requires_codeowner_reviews_issue
-#         end
-
 #         if x[:report][:has_require_approvals_enabled] == false
 #             GithubRepositoryStandards::IssueCreator.new(params).create_require_approvals_issue
 #         end 

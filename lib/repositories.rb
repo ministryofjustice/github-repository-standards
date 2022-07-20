@@ -28,9 +28,6 @@ class Repositories
     JSON.parse(json).dig("data", "search")
   end
 
-  # TODO: it should be possible to exclude disabled/locked repos in this
-  # query, but I don't know how to do that yet, so I'm just fetching everything
-  # and throwing away the disabled/locked repos later.
   def repositories_query(end_cursor)
     after = end_cursor.nil? ? "" : %(, after: "#{end_cursor}")
     %[
@@ -60,7 +57,6 @@ class Repositories
                 pattern                          # should be set to main
                 requiredApprovingReviewCount     # Require approvals > 0
                 requiresApprovingReviews         # Require a pull request before merging
-                requiresCodeOwnerReviews         # Require review from Code Owners
               }
             }
           }

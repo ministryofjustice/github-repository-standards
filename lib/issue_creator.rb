@@ -37,15 +37,6 @@ class GithubRepositoryStandards
       end
     end
 
-    def create_requires_codeowner_reviews_issue
-      if issue_already_exists("A branch protection setting is not enabled: codeowners require reviews").empty?
-        File.open("output.txt", "a") { |file| file.write("Create codeowners require reviews issue in repository: #{repository} \n") }
-        url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
-        HttpClient.new.post_json(url, requires_codeowner_reviews_issue_hash.to_json)
-        sleep 5
-      end
-    end
-
     def create_require_approvals_issue
       if issue_already_exists("A branch protection setting is not enabled: Require approvals").empty?
         File.open("output.txt", "a") { |file| file.write("Create Require approvals issue in repository: #{repository} \n") }
@@ -125,27 +116,6 @@ class GithubRepositoryStandards
           See repository settings/Branches/Branch protection rules
           Either add a new Branch protection rule or edit the existing branch protection rule and select the Include administrators option
           This will enable the branch protection rules to admin uses as well
-          See the repository standards: https://github.com/ministryofjustice/github-repository-standards
-          See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
-          Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
-        EOF
-      }
-    end
-
-    def requires_codeowner_reviews_issue_hash
-      {
-        title: "A branch protection setting is not enabled: codeowners require reviews",
-        assignees: [github_user],
-        body: <<~EOF
-          Hi there
-          The default branch protection setting called codeowners require review is not enabled for this repository
-          This option affects a pull request, i.e a PR will need to be reviewed and approved by a CODEOWNER before it can be merged. 
-          See repository settings/Branches/Branch protection rules
-          Either add a new Branch protection rule or edit the existing branch protection rule and select the Require review from Code Owners option
-          Create a .github/CODEOWNERS file
-          Add a or multiple entries of @ministryofjustice/team_name to the CODEOWNERS file
-          The team_name shall be a team from within the MoJ teams: https://github.com/orgs/ministryofjustice/teams         
-          See GH Codeowners documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
           See the repository standards: https://github.com/ministryofjustice/github-repository-standards
           See the report: https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories
           Please contact Operations Engineering on Slack #ask-operations-engineering, if you need any assistance
