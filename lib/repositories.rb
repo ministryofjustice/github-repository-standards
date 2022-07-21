@@ -28,9 +28,6 @@ class Repositories
     JSON.parse(json).dig("data", "search")
   end
 
-  # TODO: it should be possible to exclude disabled/locked repos in this
-  # query, but I don't know how to do that yet, so I'm just fetching everything
-  # and throwing away the disabled/locked repos later.
   def repositories_query(end_cursor)
     after = end_cursor.nil? ? "" : %(, after: "#{end_cursor}")
     %[
@@ -45,9 +42,7 @@ class Repositories
           isDisabled
           isLocked
           hasIssuesEnabled
-          deleteBranchOnMerge
           pushedAt
-          updatedAt
           defaultBranchRef {
             name
           }
@@ -58,18 +53,10 @@ class Repositories
           branchProtectionRules(first: 10) {
             edges {
               node {
-                dismissesStaleReviews            # Dismiss stale pull request approvals when new commits are pushed
                 isAdminEnforced                  # Include administrators
                 pattern                          # should be set to main
                 requiredApprovingReviewCount     # Require approvals > 0
-                requiredStatusCheckContexts      # Would apply to a .yml file I believe ie "terraform-plan"
                 requiresApprovingReviews         # Require a pull request before merging
-                requiresCodeOwnerReviews         # Require review from Code Owners
-                requiresCommitSignatures         # Require signed commits
-                requiresConversationResolution   # Require conversation resolution before merging
-                requiresLinearHistory            # Require linear history
-                requiresStrictStatusChecks       # Require branches to be up to date before merging
-                requiresStatusChecks             # Require status checks to pass before merging
               }
             }
           }
