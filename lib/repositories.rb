@@ -16,29 +16,51 @@ class Repositories
   private
 
   def get_all_repos
+    all_repos = get_public_repos() + get_private_repos() + get_internal_repos()
+  end
+
+  def get_public_repos
     graphql.get_paginated_results do |end_cursor|
-      data = get_repos(end_cursor)
+      data = get_repos(end_cursor, "public")
       arr = data.fetch("repos")
       [arr, data]
     end
   end
 
-  def get_repos(end_cursor = nil)
-    json = graphql.run_query(repositories_query(end_cursor))
+  def get_private_repos
+    graphql.get_paginated_results do |end_cursor|
+      data = get_repos(end_cursor, "private")
+      arr = data.fetch("repos")
+      [arr, data]
+    end
+  end
+
+  def get_internal_repos
+    graphql.get_paginated_results do |end_cursor|
+      data = get_repos(end_cursor, "internal")
+      arr = data.fetch("repos")
+      [arr, data]
+    end
+  end
+
+  def get_repos(end_cursor = nil, type = nil)
+    json = graphql.run_query(repositories_query(end_cursor, type))
     JSON.parse(json).dig("data", "search")
   end
 
-  def repositories_query(end_cursor)
+  def repositories_query(end_cursor, type)
     after = end_cursor.nil? ? "" : %(, after: "#{end_cursor}")
+    repo_type = type.nil? ? "" : %(, is:#{type})
     %[
 {
-  search(type: REPOSITORY, query: "org:ministryofjustice, is:public, archived:false", first: #{PAGE_SIZE} #{after}) {
+  search(type: REPOSITORY, query: "org:ministryofjustice, archived:false#{repo_type}", first: #{PAGE_SIZE} #{after}) {
     repos: edges {
       repo: node {
         ... on Repository {
           name
           description
           url
+          isPrivate
           isDisabled
           isLocked
           hasIssuesEnabled

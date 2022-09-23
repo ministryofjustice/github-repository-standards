@@ -1,3 +1,7 @@
 .env
 .bundle
 vendor
+venv
+private_data.json
+public_data.json
+.vscode
