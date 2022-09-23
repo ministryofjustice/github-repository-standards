@@ -50,7 +50,8 @@ def send_encrypted_data_to_server():
         )
         json_data = get_data_from_file("public_data.json")
         encrypted_data = encrypt_json(json_data)
-        req = requests.post(url, headers=headers, json=encrypted_data, timeout=1.5)
+        req = requests.post(url, headers=headers,
+                            json=encrypted_data, timeout=1.5)
         if req.status_code == 200:
             print("Sent public data to site")
 
@@ -61,7 +62,8 @@ def send_encrypted_data_to_server():
         )
         json_data = get_data_from_file("private_data.json")
         encrypted_data = encrypt_json(json_data)
-        req = requests.post(url, headers=headers, json=encrypted_data, timeout=1.5)
+        req = requests.post(url, headers=headers,
+                            json=encrypted_data, timeout=1.5)
         if req.status_code == 200:
             print("Sent private data to site")
 
