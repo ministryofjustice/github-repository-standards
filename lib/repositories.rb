@@ -16,7 +16,7 @@ class Repositories
   private
 
   def get_all_repos
-    all_repos = get_public_repos() + get_private_repos() + get_internal_repos()
+    get_public_repos() + get_private_repos() + get_internal_repos()
   end
 
   def get_public_repos
