@@ -61,7 +61,7 @@ class StandardsReport
           issues_section_enabled: has_issues_enabled?,
           has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule),
           has_license: has_license?,
-          has_description: has_description?,
+          has_description: has_description?
         }
       end
     }
@@ -139,5 +139,4 @@ class StandardsReport
   def is_private
     repo_data.dig("repo", "isPrivate")
   end
-
 end
