@@ -2,7 +2,7 @@
 
 [![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=for-the-badge&logo=github&label=MoJ%20Compliant&query=%24.data%5B%3F%28%40.name%20%3D%3D%20%22github-repository-standards%22%29%5D.status&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fgithub_repositories)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/github_repositories#github-repository-standards "Link to report")
 
-This repository contains code which uses the GitHub API to find all **public**
+This repository contains code which uses the GitHub API to find all non archived
 Ministry of Justice (MoJ) GitHub repositories, and check whether or not they
 comply with our [standards].
 
@@ -23,15 +23,17 @@ docker image or other build steps.
 
 ## Architecture
 
-- A GraphQL query retrieves information about MoJ public GitHub repositories
+- A GraphQL query retrieves information about MoJ GitHub repositories
 - Data for each repository is used to instantiate a `StandardsReport` object
 - Code in `StandardsReport` creates a report based on the data supplied
+- The data is saved to file
+- The file is encrypted and sent to the Operations Engineering Reports web application.
 
-## Public repositories should:
+## Repositories should:
 
-- be MIT Licensed (not implemented yet)
+- be MIT Licensed
 - have `main` as the default branch
-- have non-empty description (shouldn't be null or "") (not implemented yet)
+- have non-empty description (shouldn't be null or "")
 - have issues enabled
 - have branch protection on `main`, with:
   1. Require a pull request before merging

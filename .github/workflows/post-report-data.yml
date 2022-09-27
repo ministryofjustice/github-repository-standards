@@ -15,14 +15,22 @@ jobs:
           bundler-cache: true
       - run: bundle config set without "development test"
       - run: bundle install
-      - run: bin/post-data.sh
+      - run: bin/repository-checker
         env:
           ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          architecture: 'x64'
+          cache: 'pip'
+      - run: python3 -m pip install requests cryptography
+      - run: python3 scripts/python/encrypt_send_data.py
+        env:
           OPERATIONS_ENGINEERING_REPORTS_API_KEY: ${{ secrets.OPERATIONS_ENGINEERING_REPORTS_API_KEY }}
           OPERATIONS_ENGINEERING_REPORTS_HOST: ${{ secrets.OPERATIONS_ENGINEERING_REPORTS_HOST }}
-      - uses: actions/upload-artifact@v3
-        with:
-          path: output.txt
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+      - run: rm private_data.json > /dev/null 2>&1
+      - run: rm public_data.json > /dev/null 2>&1
       - name: Report failure to Slack
         if: always()
         uses: ravsamhq/notify-slack-action@v2

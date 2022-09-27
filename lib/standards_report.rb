@@ -12,9 +12,6 @@ class StandardsReport
     @repo_data = repo_data
   end
 
-  # TODO: additional checks
-  #   * MIT License
-  #   * have non-empty description
   def report
     {
       name: repo_name,
@@ -23,7 +20,7 @@ class StandardsReport
       status: status,
       last_push: last_push,
       report: all_checks_result,
-      issues_enabled: issues_enabled
+      is_private: is_private
     }
   end
 
@@ -62,7 +59,9 @@ class StandardsReport
           requires_approving_reviews: has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews"),
           administrators_require_review: has_branch_protection_property?(branch_protection_rule, "isAdminEnforced"),
           issues_section_enabled: has_issues_enabled?,
-          has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule)
+          has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule),
+          has_license: has_license?,
+          has_description: has_description?
         }
       end
     }
@@ -73,7 +72,9 @@ class StandardsReport
         requires_approving_reviews: true,
         administrators_require_review: true,
         issues_section_enabled: true,
-        has_require_approvals_enabled: true
+        has_require_approvals_enabled: true,
+        has_license: true,
+        has_description: true
       }
     end
     result
@@ -115,5 +116,27 @@ class StandardsReport
 
   def has_branch_protection_property?(branch_protection_rule, property)
     branch_protection_rule.dig("node", property)
+  end
+
+  def get_license
+    t = repo_data.dig("repo", "licenseInfo", "name")
+    t.nil? ? "" : t.downcase
+  end
+
+  def has_license?
+    get_license.include? "mit"
+  end
+
+  def get_description
+    t = repo_data.dig("repo", "description")
+    t.nil? ? 0 : t.length
+  end
+
+  def has_description?
+    get_description > 0
+  end
+
+  def is_private
+    repo_data.dig("repo", "isPrivate")
   end
 end

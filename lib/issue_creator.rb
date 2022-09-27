@@ -3,6 +3,7 @@ require_relative "http_client"
 class GithubRepositoryStandards
   class IssueCreator
     attr_reader :owner, :repository, :github_user
+    @@output_file = "output.txt"
 
     def initialize(params)
       @owner = params.fetch(:owner)
@@ -12,7 +13,7 @@ class GithubRepositoryStandards
 
     def create_default_branch_issue
       if issue_already_exists("Default branch is not main").empty?
-        File.open("output.txt", "a") { |file| file.write("Create default branch issue in repository: #{repository} \n") }
+        File.open(@@output_file, "a") { |file| file.write("Create default branch issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
         HttpClient.new.post_json(url, default_branch_issue_hash.to_json)
         sleep 5
@@ -21,7 +22,7 @@ class GithubRepositoryStandards
 
     def create_requires_approving_reviews_issue
       if issue_already_exists("A branch protection setting is not enabled: requires approving reviews").empty?
-        File.open("output.txt", "a") { |file| file.write("Create requires approving reviews issue in repository: #{repository} \n") }
+        File.open(@@output_file, "a") { |file| file.write("Create requires approving reviews issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
         HttpClient.new.post_json(url, requires_approving_reviews_issue_hash.to_json)
         sleep 5
@@ -30,7 +31,7 @@ class GithubRepositoryStandards
 
     def create_include_administrators_issue
       if issue_already_exists("A branch protection setting is not enabled: Include administrators").empty?
-        File.open("output.txt", "a") { |file| file.write("Create Include administrators issue in repository: #{repository} \n") }
+        File.open(@@output_file, "a") { |file| file.write("Create Include administrators issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
         HttpClient.new.post_json(url, include_administrators_issue_hash.to_json)
         sleep 5
@@ -39,7 +40,7 @@ class GithubRepositoryStandards
 
     def create_require_approvals_issue
       if issue_already_exists("A branch protection setting is not enabled: Require approvals").empty?
-        File.open("output.txt", "a") { |file| file.write("Create Require approvals issue in repository: #{repository} \n") }
+        File.open(@@output_file, "a") { |file| file.write("Create Require approvals issue in repository: #{repository} \n") }
         url = "https://api.github.com/repos/#{owner}/#{repository}/issues"
         HttpClient.new.post_json(url, require_approvals_issue_hash.to_json)
         sleep 5
