@@ -48,36 +48,26 @@ class StandardsReport
   end
 
   def all_checks_result
-    result = false
-    main_exists = false
-    get_branch_protection_rules.each { |branch_protection_rule|
-      if branch_protection_rule.dig("node", "pattern") == "main"
-        main_exists = true
-        result ||= {
-          default_branch_main: default_branch_main?,
-          has_default_branch_protection: has_default_branch_protection?(branch_protection_rule),
-          requires_approving_reviews: has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews"),
-          administrators_require_review: has_branch_protection_property?(branch_protection_rule, "isAdminEnforced"),
-          issues_section_enabled: has_issues_enabled?,
-          has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule),
-          has_license: has_license?,
-          has_description: has_description?
-        }
-      end
+    {
+      default_branch_main: default_branch_main?,
+      has_default_branch_protection: has_default_branch_protection_enabled,
+      requires_approving_reviews: has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews"),
+      administrators_require_review: has_branch_protection_property?(branch_protection_rule, "isAdminEnforced"),
+      issues_section_enabled: has_issues_enabled?,
+      has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule),
+      has_license: has_license?,
+      has_description: has_description?
     }
-    if main_exists == false
-      result ||= {
-        default_branch_main: false,
-        has_default_branch_protection: true,
-        requires_approving_reviews: true,
-        administrators_require_review: true,
-        issues_section_enabled: true,
-        has_require_approvals_enabled: true,
-        has_license: true,
-        has_description: true
-      }
+  end
+
+  def has_default_branch_protection_enabled
+    default_branch_protection = false
+    get_branch_protection_rules.each do |branch_protection_rule|
+      if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH
+        default_branch_protection = has_default_branch_protection?(branch_protection_rule)
+      end
     end
-    result
+    default_branch_protection
   end
 
   def issues_enabled
