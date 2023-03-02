@@ -15,16 +15,14 @@ metadata:
   title: Ministry of Justice Repository Standards Pipeline
   description: Pipeline that collects all public Ministry of Justice repositories and posts their compliance status to the Operations Engineering Reports site
   links:
-  - url: https://github.com/ministryofjustice/github-repository-standards/blob/main/bin/post-data.sh
-    title: Pipeline code
+    - url: https://github.com/ministryofjustice/github-repository-standards/blob/main/bin/post-data.sh
+      title: Pipeline code
 spec:
   owner: group:operations-engineering
   type: pipeline
   lifecycle: production
   system: system:github-repository-standards
   dependsOn:
-  - system:ops-eng-reports
+    - system:ops-eng-reports
   consumesApis:
-  - api:ops-eng-reports-api
-
-
+    - api:ops-eng-reports-api
