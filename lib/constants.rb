@@ -26,4 +26,16 @@ module Constants
 
   # Fail string
   FAIL = "FAIL"
+
+  # A Issue title
+  ISSUE_TITLE_WRONG_DEFAULT_BRANCH = "Default branch is not main"
+
+  # A Issue title
+  ISSUE_TITLE_REQUIRE_APROVERS = "A branch protection setting is not enabled: requires approving reviews"
+
+  # A Issue title
+  ISSUE_TITLE_INCLUDE_ADMINISTRATORS = "A branch protection setting is not enabled: Include administrators"
+
+  # A Issue title
+  ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS = "A branch protection setting is not enabled: Require approvals"
 end

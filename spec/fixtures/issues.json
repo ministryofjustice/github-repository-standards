@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "number": 123,
+    "title": "Default branch is not main",
+    "state": "open",
+    "locked": false,
+    "assignee": [
+      {
+        "login": "assigneduser1"
+      }
+    ],
+    "assignees": [
+      {
+        "login": "assigneduser1"
+      }
+    ],
+    "created_at": "2021-12-16T12:23:46Z",
+    "updated_at": "2021-12-16T12:23:46Z",
+    "body": ""
+  },
+  {
+    "id": 2,
+    "number": 456,
+    "title": "A branch protection setting is not enabled: requires approving reviews",
+    "state": "open",
+    "locked": false,
+    "assignee": [
+      {
+        "login": "assigneduser2"
+      }
+    ],
+    "assignees": [
+      {
+        "login": "assigneduser2"
+      }
+    ],
+    "created_at": "2021-12-16T12:23:46Z",
+    "updated_at": "2021-12-16T12:23:46Z",
+    "body": ""
+  },
+  {
+    "id": 3,
+    "number": 789,
+    "title": "A branch protection setting is not enabled: Include administrators",
+    "state": "open",
+    "locked": false,
+    "assignee": [
+      {
+        "login": "assigneduser3"
+      }
+    ],
+    "assignees": [
+      {
+        "login": "assigneduser3"
+      }
+    ],
+    "created_at": "2021-12-16T12:23:46Z",
+    "updated_at": "2021-12-16T12:23:46Z",
+    "body": ""
+  },
+  {
+    "id": 4,
+    "number": 159,
+    "title": "A branch protection setting is not enabled: Require approvals",
+    "state": "open",
+    "locked": false,
+    "assignee": [
+      {
+        "login": "assigneduser4"
+      }
+    ],
+    "assignees": [
+      {
+        "login": "assigneduser4"
+      }
+    ],
+    "created_at": "2021-12-16T12:23:46Z",
+    "updated_at": "2021-12-16T12:23:46Z",
+    "body": ""
+  }
+]

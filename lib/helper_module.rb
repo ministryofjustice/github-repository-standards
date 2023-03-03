@@ -46,7 +46,7 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_default_branch_issue(repository_name)
-    if issue_already_exists("Default branch is not main", repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_WRONG_DEFAULT_BRANCH, repository_name).empty?
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, default_branch_issue_hash.to_json)
       sleep 2
@@ -57,7 +57,7 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_requires_approving_reviews_issue(repository_name)
-    if issue_already_exists("A branch protection setting is not enabled: requires approving reviews", repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_REQUIRE_APROVERS, repository_name).empty?
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, requires_approving_reviews_issue_hash.to_json)
       sleep 2
@@ -68,9 +68,9 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_include_administrators_issue(repository_name)
-    if issue_already_exists("A branch protection setting is not enabled: Include administrators", repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_INCLUDE_ADMINISTRATORS, repository_name).empty?
       url = "#{GH_API_URL}/#{repository_name}/issues"
-      GithubRepositoryStandards::HttpClient.new.post_json(url, include_administrators_issue_hash.to_json)
+      GithubRepositoryStandards::HttpClient.new.post_json(url, include_awdministrators_issue_hash.to_json)
       sleep 2
     end
   end
@@ -79,7 +79,7 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_require_approvals_issue(repository_name)
-    if issue_already_exists("A branch protection setting is not enabled: Require approvals", repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS, repository_name).empty?
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, require_approvals_issue_hash.to_json)
       sleep 2
@@ -91,7 +91,7 @@ module HelperModule
   # @param issue_title [String] title in the Issue
   # @param repository_name [String] name of the repository
   # @return [Array] Either empty or an open issue
-  def issue_already_exists(issue_title, repository)
+  def does_issue_already_exist(issue_title, repository)
     response_json = get_issues_from_github(repository)
 
     if response_json.nil? || response_json.empty?
@@ -113,7 +113,7 @@ module HelperModule
   # @return [Hash{title => String, assignees => Array<String>, body => String}] the Issue to send to GitHub
   def default_branch_issue_hash
     {
-      title: "Default branch is not main",
+      title: ISSUE_TITLE_WRONG_DEFAULT_BRANCH,
       assignees: [ORG],
       body: <<~EOF
         Hi there
@@ -131,7 +131,7 @@ module HelperModule
   # @return [Hash{title => String, assignees => Array<String>, body => String}] the Issue to send to GitHub
   def requires_approving_reviews_issue_hash
     {
-      title: "A branch protection setting is not enabled: requires approving reviews",
+      title: ISSUE_TITLE_REQUIRE_APROVERS,
       assignees: [ORG],
       body: <<~EOF
         Hi there
@@ -151,7 +151,7 @@ module HelperModule
   # @return [Hash{title => String, assignees => Array<String>, body => String}] the Issue to send to GitHub
   def include_administrators_issue_hash
     {
-      title: "A branch protection setting is not enabled: Include administrators",
+      title: ISSUE_TITLE_INCLUDE_ADMINISTRATORS,
       assignees: [ORG],
       body: <<~EOF
         Hi there
@@ -171,7 +171,7 @@ module HelperModule
   # @return [Hash{title => String, assignees => Array<String>, body => String}] the Issue to send to GitHub
   def require_approvals_issue_hash
     {
-      title: "A branch protection setting is not enabled: Require approvals",
+      title: ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS,
       assignees: [ORG],
       body: <<~EOF
         Hi there

@@ -2,11 +2,13 @@
 class GithubRepositoryStandards
   # The GithubGraphQlClient class
   class GithubGraphQlClient
+    include Logging
     include Constants
 
     # Get data from Github using the GraphQL API
 
     def initialize
+      logger.debug "initialize"
       # Keep here so abort when object is created if the token is missing
       @github_token = ENV.fetch("ADMIN_GITHUB_TOKEN")
     end
@@ -16,6 +18,8 @@ class GithubRepositoryStandards
     # @param response [Net::HTTPResponse] the response object
     # @return [Bool] true if no issue were found in the reply
     def is_response_okay(response)
+      logger.debug "is_response_okay"
+
       if response.nil? || response == "" || response.code != "200"
         return false
       end
@@ -26,6 +30,9 @@ class GithubRepositoryStandards
       elsif response.body.include?(RATE_LIMITED)
         sleep 300
         return false
+      elsif response.body.include?("errors")
+        logger.fatal "GH GraphQL query contains errors"
+        abort(response.body)
       end
 
       true
@@ -36,6 +43,7 @@ class GithubRepositoryStandards
     # @param query [string] the query to send to GitHub
     # @return [string] the returned data from GitHub
     def run_query(query)
+      logger.debug "run_query"
       got_data = false
       count = 0
 
@@ -58,6 +66,7 @@ class GithubRepositoryStandards
     # @param body [string] the query data to send to GitHub
     # @return [Net::HTTPResponse] the reply data from GitHub
     def query_github_api(body)
+      logger.debug "query_github_api"
       json = {query: body}.to_json
       headers = {"Authorization" => "bearer #{@github_token}"}
       uri = URI.parse(GRAPHQL_URI)
