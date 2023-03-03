@@ -1,5 +1,5 @@
 # The GithubRepositoryStandards class namespace
-class GithubRepositoryStandards  
+class GithubRepositoryStandards
   # The GithubGraphQlClient class
   class GithubGraphQlClient
     include Constants
@@ -16,7 +16,6 @@ class GithubRepositoryStandards
     # @param response [Net::HTTPResponse] the response object
     # @return [Bool] true if no issue were found in the reply
     def is_response_okay(response)
-
       if response.nil? || response == "" || response.code != "200"
         return false
       end

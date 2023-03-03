@@ -6,7 +6,7 @@ class GithubRepositoryStandards
     include Constants
 
     def initialize(repo_data)
-      # One repository data as Hash/JSON 
+      # One repository data as Hash/JSON
       @repo_data = repo_data
     end
 
@@ -58,7 +58,7 @@ class GithubRepositoryStandards
 
     # Return the branch protections rules for the repository
     #
-    # @return [Array<Hash{}>] the branch protections rules   
+    # @return [Array<Hash{}>] the branch protections rules
     def get_branch_protection_rules
       repo_data.dig("repo", "branchProtectionRules", "edges")
     end
@@ -137,7 +137,7 @@ class GithubRepositoryStandards
     def issues_enabled
       repo_data.dig("repo", "hasIssuesEnabled")
     end
-    
+
     # Check Standard: Issue section on repository enabled
     #
     # @return [Bool] true if Issue section on repository is enabled on repository
@@ -189,7 +189,7 @@ class GithubRepositoryStandards
     end
 
     # Check if rule is enabled inside a branch protection settings
-    # 
+    #
     # @param branch_protection_rule[Hash{}] The rules in a branch protection setting
     # @param property[String] The rule to check for
     # @return [Bool] true if rule is enabled in the branch protection setting
@@ -198,7 +198,7 @@ class GithubRepositoryStandards
     end
 
     # Read the license type from the data
-    # 
+    #
     # @return [String] the name of the license
     def get_license
       t = repo_data.dig("repo", "licenseInfo", "name")
@@ -220,7 +220,7 @@ class GithubRepositoryStandards
       t.nil? ? 0 : t.length
     end
 
-    # Check Standard: The repository description is completed 
+    # Check Standard: The repository description is completed
     #
     # @return [Bool] true if repository description is not empty
     def has_description?
@@ -229,7 +229,7 @@ class GithubRepositoryStandards
 
     # Return if the repository is private or not
     #
-    # @return [Bool] true if repository is private   
+    # @return [Bool] true if repository is private
     def is_private
       repo_data.dig("repo", "isPrivate")
     end

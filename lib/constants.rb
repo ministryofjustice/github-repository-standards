@@ -1,6 +1,5 @@
 # String constants used in app and tests
 module Constants
-
   # GitHub reply when rate limiting is active
   RATE_LIMITED = "RATE_LIMITED"
 
@@ -27,5 +26,4 @@ module Constants
 
   # Fail string
   FAIL = "FAIL"
-
 end
