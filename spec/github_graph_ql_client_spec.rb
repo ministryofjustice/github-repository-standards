@@ -43,11 +43,6 @@ class GithubRepositoryStandards
             expect { graphql_client.run_query(query) }.to raise_error(SystemExit)
           end
 
-          it "when result is 200 but contains errors so abort" do
-            stub_request(:any, GRAPHQL_URI).to_return(body: "errors", status: 200)
-            expect { graphql_client.run_query(query) }.to raise_error(SystemExit)
-          end
-
           it "when result is 200 but RATE_LIMITED so abort" do
             stub_request(:any, GRAPHQL_URI).to_return(body: RATE_LIMITED, status: 200)
             expect { graphql_client.run_query(query) }.to raise_error(SystemExit)

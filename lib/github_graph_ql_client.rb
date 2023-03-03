@@ -30,9 +30,6 @@ class GithubRepositoryStandards
       elsif response.body.include?(RATE_LIMITED)
         sleep 300
         return false
-      elsif response.body.include?("errors")
-        logger.fatal "GH GraphQL query contains errors"
-        abort(response.body)
       end
 
       true
