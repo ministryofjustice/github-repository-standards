@@ -51,10 +51,10 @@ class StandardsReport
     {
       default_branch_main: default_branch_main?,
       has_default_branch_protection: has_default_branch_protection_enabled,
-      requires_approving_reviews: has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews"),
-      administrators_require_review: has_branch_protection_property?(branch_protection_rule, "isAdminEnforced"),
+      requires_approving_reviews: has_branch_protection_property?(branch_protection_rules, "requiresApprovingReviews"),
+      administrators_require_review: has_branch_protection_property?(branch_protection_rules, "isAdminEnforced"),
       issues_section_enabled: has_issues_enabled?,
-      has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rule),
+      has_require_approvals_enabled: has_required_appproving_review_count?(branch_protection_rules),
       has_license: has_license?,
       has_description: has_description?
     }
