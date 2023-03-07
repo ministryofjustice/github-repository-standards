@@ -14,7 +14,7 @@ module HelperModule
 
   # Write public repository data to a file
   #
-  # @param results [Array<Hash{}>] the list of repository data
+  # @param results [Array<Hash{name => String, default_branch => String, repo_url => String, status => String, last_push => Date, report => Hash, is_private => boolean }]}>] the list of repository data
   def write_public_data(results)
     public_repos = results.reject { |r| r.dig(:is_private) == true }
 
@@ -29,7 +29,7 @@ module HelperModule
 
   # Write private repository data to a file
   #
-  # @param results [Array<Hash{}>] the list of repository data
+  # @param results [Array<Hash{name => String, default_branch => String, repo_url => String, status => String, last_push => Date, report => Hash, is_private => boolean }]}>] the list of repository data
   def write_private_data(results)
     private_repos = results.reject { |r| r.dig(:is_private) == false }
 
@@ -46,7 +46,7 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_default_branch_issue(repository_name)
-    if does_issue_already_exist(ISSUE_TITLE_WRONG_DEFAULT_BRANCH, repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_WRONG_DEFAULT_BRANCH, repository_name) == false
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, default_branch_issue_hash.to_json)
       sleep 2
@@ -57,7 +57,7 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_requires_approving_reviews_issue(repository_name)
-    if does_issue_already_exist(ISSUE_TITLE_REQUIRE_APROVERS, repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_REQUIRE_APROVERS, repository_name) == false
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, requires_approving_reviews_issue_hash.to_json)
       sleep 2
@@ -68,9 +68,9 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_include_administrators_issue(repository_name)
-    if does_issue_already_exist(ISSUE_TITLE_INCLUDE_ADMINISTRATORS, repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_INCLUDE_ADMINISTRATORS, repository_name) == false
       url = "#{GH_API_URL}/#{repository_name}/issues"
-      GithubRepositoryStandards::HttpClient.new.post_json(url, include_awdministrators_issue_hash.to_json)
+      GithubRepositoryStandards::HttpClient.new.post_json(url, include_administrators_issue_hash.to_json)
       sleep 2
     end
   end
@@ -79,33 +79,37 @@ module HelperModule
   #
   # @param repository_name [String] name of the repository
   def create_require_approvals_issue(repository_name)
-    if does_issue_already_exist(ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS, repository_name).empty?
+    if does_issue_already_exist(ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS, repository_name) == false
       url = "#{GH_API_URL}/#{repository_name}/issues"
       GithubRepositoryStandards::HttpClient.new.post_json(url, require_approvals_issue_hash.to_json)
       sleep 2
     end
   end
 
-  # Return an open issue from the repo if it already exists
+  # Check if an open issue from the repo already exists
   #
-  # @param issue_title [String] title in the Issue
+  # @param issue_title [String] title of the Issue
   # @param repository_name [String] name of the repository
-  # @return [Array] Either empty or an open issue
+  # @return [Bool] True if issue exists already
   def does_issue_already_exist(issue_title, repository)
+    issue_exists = false
+
     response_json = get_issues_from_github(repository)
 
     if response_json.nil? || response_json.empty?
       # Return empty array if no issues
-      []
     else
       # Get Issues used by this application based on the title
       issues = response_json.select { |x| x[:title].include? issue_title }
-      if !issues.nil? && !issues&.empty?
-        issues.select { |x| x[:state] == "open" }
-      else
-        []
+      if !issues.nil? || !issues&.empty?
+        open_issues = []
+        open_issues = issues.select { |x| x[:state] == "open" }
+        if open_issues.length > 0
+          issue_exists = true
+        end
       end
     end
+    issue_exists
   end
 
   # Composes a GitHub Issue structured message

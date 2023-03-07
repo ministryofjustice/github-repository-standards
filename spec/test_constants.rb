@@ -8,5 +8,6 @@ module TestConstants
   CATCH_ERROR = "catch error"
   TEST_REPO_NAME = "test-repo"
   TEST_URL = "#{GH_API_URL}/#{TEST_REPO_NAME}/issues"
+  REPO_URL = "#{GH_ORG_URL}/#{TEST_REPO_NAME}"
   BODY = "abc"
 end

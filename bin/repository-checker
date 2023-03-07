@@ -27,7 +27,6 @@ class RepositoryChecker
     #     end 
     #   end
     # end
-    
     write_public_data(results)
     write_private_data(results)
   end
