@@ -1,0 +1,38 @@
+{
+  "data": {
+    "search": {
+      "repos": [
+        {
+          "repo": {
+            "name": "some-repo",
+            "description": "abc",
+            "url": "some-url",
+            "isPrivate": false,
+            "isDisabled": false,
+            "isLocked": false,
+            "hasIssuesEnabled": true,
+            "pushedAt": "2023-03-07T11:00:38Z",
+            "defaultBranchRef": {
+              "name": "main"
+            },
+            "licenseInfo": {
+              "name": "MIT License"
+            },
+            "branchProtectionRules": {
+              "edges": [
+                {
+                  "node": {
+                    "isAdminEnforced": true,
+                    "pattern": "main",
+                    "requiredApprovingReviewCount": 1,
+                    "requiresApprovingReviews": true
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

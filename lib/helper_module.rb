@@ -188,4 +188,85 @@ module HelperModule
       EOF
     }
   end
+
+  # The GraphQL wrapper to collect the repositories queries
+  #
+  # @return [Array<Hash{}] a list of the Repositories queried data
+  def get_repos
+    graphql = GithubRepositoryStandards::GithubGraphQlClient.new
+    repos = []
+    ["public", "private", "internal"].each do |type|
+      end_cursor = nil
+      loop do
+        response = graphql.run_query(repositories_query(end_cursor, type))
+        json_data = JSON.parse(response)
+        if !json_data.dig("data", "search", "repos").nil?
+          repositories = json_data.dig("data", "search", "repos")
+          repositories = repositories.reject { |r| r.dig("repo", "isDisabled") }
+          repositories = repositories.reject { |r| r.dig("repo", "isLocked") }
+          repositories.each do |repo|
+            repos.push(repo)
+          end
+        end
+        end_cursor = json_data.dig("data", "search", "pageInfo", "endCursor")
+        break unless json_data.dig("data", "search", "pageInfo", "hasNextPage")
+      end
+    end
+    repos
+  end
+
+  # The GraphQL query to get repository data
+  #
+  # @param end_cursor [String] id of next page in search results
+  # @param type [String] repository type (public, private, internal)
+  # @return [String] the Repositories queried data
+  def repositories_query(end_cursor, type)
+    after = end_cursor.nil? ? "null" : "\"#{end_cursor}\""
+    %[
+      {
+        search(
+          type: REPOSITORY
+          query: "org:#{ORG}, archived:false, is:#{type}"
+          first: 100
+          after: #{after}
+        ) {
+          repos: edges {
+            repo: node {
+              ... on Repository {
+                name
+                description
+                url
+                isPrivate
+                isDisabled
+                isLocked
+                hasIssuesEnabled
+                pushedAt
+                defaultBranchRef {
+                  name
+                }
+                licenseInfo {
+                  name
+                }
+
+                branchProtectionRules(first: 10) {
+                  edges {
+                    node {
+                      isAdminEnforced                  # Include administrators
+                      pattern                          # should be set to main
+                      requiredApprovingReviewCount     # Require approvals > 0
+                      requiresApprovingReviews         # Require a pull request before merging
+                    }
+                  }
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    ]
+  end
 end

@@ -25,8 +25,6 @@ class GithubRepositoryStandards
       }
     end
 
-    private
-
     # Return the repository name
     #
     # @return [String] the repository name

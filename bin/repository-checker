@@ -6,7 +6,7 @@ class RepositoryChecker
   include HelperModule
 
   def start
-    results = GithubRepositoryStandards::Repositories.new.list.map { |hash| GithubRepositoryStandards::StandardsReport.new(hash).report }
+    results = get_repos.map { |hash| GithubRepositoryStandards::StandardsReport.new(hash).report }
 
     # results.each do |repo|
     #   if repo[:status] == FAIL && repo[:report][:issues_section_enabled]

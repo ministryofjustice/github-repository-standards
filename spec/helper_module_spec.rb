@@ -7,13 +7,157 @@ class GithubRepositoryStandards
     let(:http_client) { double(GithubRepositoryStandards::HttpClient) }
     let(:graphql_client) { double(GithubRepositoryStandards::GithubGraphQlClient) }
 
+    public_json_data =
+      %[
+      {
+        search(
+          type: REPOSITORY
+          query: "org:#{ORG}, archived:false, is:public"
+          first: 100
+          after: null
+        ) {
+          repos: edges {
+            repo: node {
+              ... on Repository {
+                name
+                description
+                url
+                isPrivate
+                isDisabled
+                isLocked
+                hasIssuesEnabled
+                pushedAt
+                defaultBranchRef {
+                  name
+                }
+                licenseInfo {
+                  name
+                }
+
+                branchProtectionRules(first: 10) {
+                  edges {
+                    node {
+                      isAdminEnforced                  # Include administrators
+                      pattern                          # should be set to main
+                      requiredApprovingReviewCount     # Require approvals > 0
+                      requiresApprovingReviews         # Require a pull request before merging
+                    }
+                  }
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    ]
+
+    private_json_data =
+      %[
+      {
+        search(
+          type: REPOSITORY
+          query: "org:#{ORG}, archived:false, is:private"
+          first: 100
+          after: null
+        ) {
+          repos: edges {
+            repo: node {
+              ... on Repository {
+                name
+                description
+                url
+                isPrivate
+                isDisabled
+                isLocked
+                hasIssuesEnabled
+                pushedAt
+                defaultBranchRef {
+                  name
+                }
+                licenseInfo {
+                  name
+                }
+
+                branchProtectionRules(first: 10) {
+                  edges {
+                    node {
+                      isAdminEnforced                  # Include administrators
+                      pattern                          # should be set to main
+                      requiredApprovingReviewCount     # Require approvals > 0
+                      requiresApprovingReviews         # Require a pull request before merging
+                    }
+                  }
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    ]
+
+    internal_json_data =
+      %[
+      {
+        search(
+          type: REPOSITORY
+          query: "org:#{ORG}, archived:false, is:internal"
+          first: 100
+          after: null
+        ) {
+          repos: edges {
+            repo: node {
+              ... on Repository {
+                name
+                description
+                url
+                isPrivate
+                isDisabled
+                isLocked
+                hasIssuesEnabled
+                pushedAt
+                defaultBranchRef {
+                  name
+                }
+                licenseInfo {
+                  name
+                }
+
+                branchProtectionRules(first: 10) {
+                  edges {
+                    node {
+                      isAdminEnforced                  # Include administrators
+                      pattern                          # should be set to main
+                      requiredApprovingReviewCount     # Require approvals > 0
+                      requiresApprovingReviews         # Require a pull request before merging
+                    }
+                  }
+                }
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    ]
+
     context "" do
-      private_input_data = [{"name":"#{TEST_REPO_NAME}","default_branch":"main","url":"#{REPO_URL}","status":"PASS","last_push":"2023-03-07","report":{"default_branch_main":true,"has_default_branch_protection":true,"requires_approving_reviews":true,"administrators_require_review":true,"issues_section_enabled":true,"has_require_approvals_enabled":true,"has_license":true,"has_description":true},"is_private":true}]
-      public_input_data = [{"name":"#{TEST_REPO_NAME}","default_branch":"main","url":"#{REPO_URL}","status":"PASS","last_push":"2023-03-07","report":{"default_branch_main":true,"has_default_branch_protection":true,"requires_approving_reviews":true,"administrators_require_review":true,"issues_section_enabled":true,"has_require_approvals_enabled":true,"has_license":true,"has_description":true},"is_private":false}]
-      private_expected_data = {"data": [{"name":"#{TEST_REPO_NAME}","default_branch":"main","url":"#{REPO_URL}","status":"PASS","last_push":"2023-03-07","report":{"default_branch_main":true,"has_default_branch_protection":true,"requires_approving_reviews":true,"administrators_require_review":true,"issues_section_enabled":true,"has_require_approvals_enabled":true,"has_license":true,"has_description":true},"is_private":true}]}
-      public_expected_data = {"data": [{"name":"#{TEST_REPO_NAME}","default_branch":"main","url":"#{REPO_URL}","status":"PASS","last_push":"2023-03-07","report":{"default_branch_main":true,"has_default_branch_protection":true,"requires_approving_reviews":true,"administrators_require_review":true,"issues_section_enabled":true,"has_require_approvals_enabled":true,"has_license":true,"has_description":true},"is_private":false}]}
+      private_input_data = [{name: TEST_REPO_NAME.to_s, default_branch: "main", url: REPO_URL.to_s, status: "PASS", last_push: "2023-03-07", report: {default_branch_main: true, has_default_branch_protection: true, requires_approving_reviews: true, administrators_require_review: true, issues_section_enabled: true, has_require_approvals_enabled: true, has_license: true, has_description: true}, is_private: true}]
+      public_input_data = [{name: TEST_REPO_NAME.to_s, default_branch: "main", url: REPO_URL.to_s, status: "PASS", last_push: "2023-03-07", report: {default_branch_main: true, has_default_branch_protection: true, requires_approving_reviews: true, administrators_require_review: true, issues_section_enabled: true, has_require_approvals_enabled: true, has_license: true, has_description: true}, is_private: false}]
+      private_expected_data = {data: [{name: TEST_REPO_NAME.to_s, default_branch: "main", url: REPO_URL.to_s, status: "PASS", last_push: "2023-03-07", report: {default_branch_main: true, has_default_branch_protection: true, requires_approving_reviews: true, administrators_require_review: true, issues_section_enabled: true, has_require_approvals_enabled: true, has_license: true, has_description: true}, is_private: true}]}
+      public_expected_data = {data: [{name: TEST_REPO_NAME.to_s, default_branch: "main", url: REPO_URL.to_s, status: "PASS", last_push: "2023-03-07", report: {default_branch_main: true, has_default_branch_protection: true, requires_approving_reviews: true, administrators_require_review: true, issues_section_enabled: true, has_require_approvals_enabled: true, has_license: true, has_description: true}, is_private: false}]}
       url = "#{GH_API_URL}/#{TEST_REPO_NAME}/issues"
-      
+
       default_branch_issue_hash = {
         title: ISSUE_TITLE_WRONG_DEFAULT_BRANCH,
         assignees: [ORG],
@@ -76,7 +220,7 @@ class GithubRepositoryStandards
           expect(File).not_to receive(:write)
           helper_module.write_public_data([])
         end
-        
+
         it "when data is private" do
           expect(File).not_to receive(:write)
           helper_module.write_public_data(private_input_data)
@@ -93,7 +237,7 @@ class GithubRepositoryStandards
           expect(File).not_to receive(:write)
           helper_module.write_private_data([])
         end
-        
+
         it "when data is public" do
           expect(File).not_to receive(:write)
           helper_module.write_private_data(public_input_data)
@@ -109,7 +253,7 @@ class GithubRepositoryStandards
         before do
           expect(GithubRepositoryStandards::HttpClient).to receive(:new).and_return(http_client)
         end
-        
+
         let(:json) { File.read("spec/fixtures/issues.json") }
 
         it "when no issues exist" do
@@ -180,25 +324,25 @@ class GithubRepositoryStandards
           end
         end
       end
-    
+
       context "call hash functions" do
         it "call default_branch_issue_hash" do
           test_equal(helper_module.default_branch_issue_hash, default_branch_issue_hash)
         end
-        
+
         it "call requires_approving_reviews_issue_hash" do
           test_equal(helper_module.requires_approving_reviews_issue_hash, requires_approving_reviews_issue_hash)
         end
-      
+
         it "call include_administrators_issue_hash" do
           test_equal(helper_module.include_administrators_issue_hash, include_administrators_issue_hash)
         end
-        
+
         it "call require_approvals_issue_hash" do
           test_equal(helper_module.require_approvals_issue_hash, require_approvals_issue_hash)
         end
       end
-    
+
       context "call create_require_approvals_issue" do
         it "when issue already exists on repo" do
           expect(helper_module).to receive(:does_issue_already_exist).with(ISSUE_TITLE_INCORRECT_MINIMUM_APROVERS, TEST_REPO_NAME).and_return(true)
@@ -213,7 +357,7 @@ class GithubRepositoryStandards
           helper_module.create_require_approvals_issue(TEST_REPO_NAME)
         end
       end
-    
+
       context "call create_default_branch_issue" do
         it "when issue already exists on repo" do
           expect(helper_module).to receive(:does_issue_already_exist).with(ISSUE_TITLE_WRONG_DEFAULT_BRANCH, TEST_REPO_NAME).and_return(true)
@@ -228,7 +372,7 @@ class GithubRepositoryStandards
           helper_module.create_default_branch_issue(TEST_REPO_NAME)
         end
       end
-    
+
       context "call create_requires_approving_reviews_issue" do
         it "when issue already exists on repo" do
           expect(helper_module).to receive(:does_issue_already_exist).with(ISSUE_TITLE_REQUIRE_APROVERS, TEST_REPO_NAME).and_return(true)
@@ -243,7 +387,7 @@ class GithubRepositoryStandards
           helper_module.create_requires_approving_reviews_issue(TEST_REPO_NAME)
         end
       end
-      
+
       context "call create_include_administrators_issue" do
         it "when issue already exists on repo" do
           expect(helper_module).to receive(:does_issue_already_exist).with(ISSUE_TITLE_INCLUDE_ADMINISTRATORS, TEST_REPO_NAME).and_return(true)
@@ -257,7 +401,56 @@ class GithubRepositoryStandards
           expect(http_client).to receive(:post_json).with(url, include_administrators_issue_hash.to_json)
           helper_module.create_include_administrators_issue(TEST_REPO_NAME)
         end
-      end  
+      end
+    end
+
+    return_data_no_repositories =
+      %(
+        {
+          "data": {
+            "search": {
+              "repos": [],
+              "pageInfo": {
+                "hasNextPage": false,
+                "endCursor": null
+              }
+            }
+          }
+        }
+      )
+
+    context "" do
+      before do
+        expect(GithubRepositoryStandards::GithubGraphQlClient).to receive(:new).and_return(graphql_client)
+      end
+
+      it "call get_repos with no pagination" do
+        private_return_data = File.read("spec/fixtures/private-repo.json")
+        internal_return_data = File.read("spec/fixtures/internal-repo.json")
+        public_return_data = File.read("spec/fixtures/public-repo.json")
+        expect(graphql_client).to receive(:run_query).with(public_json_data).and_return(public_return_data)
+        expect(graphql_client).to receive(:run_query).with(private_json_data).and_return(private_return_data)
+        expect(graphql_client).to receive(:run_query).with(internal_json_data).and_return(internal_return_data)
+        repositories = helper_module.get_repos
+        test_equal(repositories.length, 3)
+      end
+
+      it "call get_repos when repos are locked and disabled" do
+        public_return_data = File.read("spec/fixtures/disabled-public-repos.json")
+        expect(graphql_client).to receive(:run_query).with(public_json_data).and_return(public_return_data)
+        expect(graphql_client).to receive(:run_query).with(private_json_data).and_return(return_data_no_repositories)
+        expect(graphql_client).to receive(:run_query).with(internal_json_data).and_return(return_data_no_repositories)
+        repositories = helper_module.get_repos
+        test_equal(repositories.length, 0)
+      end
+
+      it "call get_repos when no repos" do
+        expect(graphql_client).to receive(:run_query).with(public_json_data).and_return(return_data_no_repositories)
+        expect(graphql_client).to receive(:run_query).with(private_json_data).and_return(return_data_no_repositories)
+        expect(graphql_client).to receive(:run_query).with(internal_json_data).and_return(return_data_no_repositories)
+        repositories = helper_module.get_repos
+        test_equal(repositories.length, 0)
+      end
     end
   end
 end
