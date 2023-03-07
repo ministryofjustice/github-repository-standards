@@ -1,0 +1,68 @@
+{
+  "data": {
+    "search": {
+      "repos": [
+        {
+          "repo": {
+            "name": "test-repo1",
+            "description": "abc",
+            "url": "some-url",
+            "isPrivate": false,
+            "isDisabled": true,
+            "isLocked": false,
+            "hasIssuesEnabled": true,
+            "pushedAt": "2023-03-07T11:00:38Z",
+            "defaultBranchRef": {
+              "name": "main"
+            },
+            "licenseInfo": {
+              "name": "MIT License"
+            },
+            "branchProtectionRules": {
+              "edges": [
+                {
+                  "node": {
+                    "isAdminEnforced": true,
+                    "pattern": "main",
+                    "requiredApprovingReviewCount": 1,
+                    "requiresApprovingReviews": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "repo": {
+            "name": "test-repo2",
+            "description": "abc",
+            "url": "some-url",
+            "isPrivate": false,
+            "isDisabled": false,
+            "isLocked": true,
+            "hasIssuesEnabled": true,
+            "pushedAt": "2023-03-07T11:00:38Z",
+            "defaultBranchRef": {
+              "name": "main"
+            },
+            "licenseInfo": {
+              "name": "MIT License"
+            },
+            "branchProtectionRules": {
+              "edges": [
+                {
+                  "node": {
+                    "isAdminEnforced": true,
+                    "pattern": "main",
+                    "requiredApprovingReviewCount": 1,
+                    "requiresApprovingReviews": true
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
