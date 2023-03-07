@@ -3,7 +3,6 @@ require "logger"
 require "net/http"
 require "uri"
 require "time"
-require "logger"
 
 require_relative "./constants"
 require_relative "./logging"

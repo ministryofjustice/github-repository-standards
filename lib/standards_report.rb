@@ -83,8 +83,8 @@ class GithubRepositoryStandards
     def has_default_branch_protection_enabled
       default_branch_protection = false
       get_branch_protection_rules.each do |branch_protection_rule|
-        if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH
-          default_branch_protection = has_default_branch_protection?(branch_protection_rule)
+        if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH && default_branch == MAIN_BRANCH
+          default_branch_protection = true
         end
       end
       default_branch_protection
@@ -97,7 +97,7 @@ class GithubRepositoryStandards
       requires_approving_reviews = false
       get_branch_protection_rules.each do |branch_protection_rule|
         if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH
-          requires_approving_reviews = has_branch_protection_property?(branch_protection_rule, "requiresApprovingReviews")
+          requires_approving_reviews = branch_protection_rule.dig("node", "requiresApprovingReviews")
         end
       end
       requires_approving_reviews
@@ -110,7 +110,7 @@ class GithubRepositoryStandards
       admin_requires_reviews = false
       get_branch_protection_rules.each do |branch_protection_rule|
         if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH
-          admin_requires_reviews = has_branch_protection_property?(branch_protection_rule, "isAdminEnforced")
+          admin_requires_reviews = branch_protection_rule.dig("node", "isAdminEnforced")
         end
       end
       admin_requires_reviews
@@ -123,7 +123,12 @@ class GithubRepositoryStandards
       required_appproving_review_count = false
       get_branch_protection_rules.each do |branch_protection_rule|
         if branch_protection_rule.dig("node", "pattern") == MAIN_BRANCH
-          required_appproving_review_count = has_required_appproving_review_count?(branch_protection_rule)
+          approval_count = branch_protection_rule.dig("node", "requiredApprovingReviewCount")
+          if approval_count.nil?
+            # ignore
+          elsif approval_count > 0
+            required_appproving_review_count = true
+          end
         end
       end
       required_appproving_review_count
@@ -150,49 +155,11 @@ class GithubRepositoryStandards
       repo_data.dig("repo", "defaultBranchRef", "name")
     end
 
-    # Return the repository branch protections rules per protected branch
-    #
-    # @return [Array<Hash{}>] the branch protections rules
-    def branch_protection_rules
-      @rules ||= repo_data.dig("repo", "branchProtectionRules", "edges")
-    end
-
     # Check Standard: Main branch is default
     #
     # @return [Bool] true if the main branch is default
     def default_branch_main?
       default_branch == MAIN_BRANCH
-    end
-
-    # Check Standard: Branch protection applied to the main branch ie Main
-    #
-    # @param branch_protection_rule[Hash{}] The rules in a branch protection setting
-    # @return [Bool] true if the main branch is default and has branch protection enabled
-    def has_default_branch_protection?(branch_protection_rule)
-      pattern = branch_protection_rule.dig("node", "pattern")
-      pattern == default_branch
-    end
-
-    # Check Standard: At least one approver is needed on a PR
-    #
-    # @param branch_protection_rule[Hash{}] The rules in a branch protection setting
-    # @return [Bool] true if the branch protection minimum approver is enabled
-    def has_required_appproving_review_count?(branch_protection_rule)
-      approval_count = branch_protection_rule.dig("node", "requiredApprovingReviewCount")
-      if approval_count.nil?
-        false
-      else
-        approval_count > 0
-      end
-    end
-
-    # Check if rule is enabled inside a branch protection settings
-    #
-    # @param branch_protection_rule[Hash{}] The rules in a branch protection setting
-    # @param property[String] The rule to check for
-    # @return [Bool] true if rule is enabled in the branch protection setting
-    def has_branch_protection_property?(branch_protection_rule, property)
-      branch_protection_rule.dig("node", property)
     end
 
     # Read the license type from the data

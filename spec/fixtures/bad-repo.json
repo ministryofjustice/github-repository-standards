@@ -5,27 +5,27 @@
         {
           "repo": {
             "name": "test-repo",
-            "description": "abc",
+            "description": "",
             "url": "some-url",
             "isPrivate": true,
             "isDisabled": false,
             "isLocked": false,
-            "hasIssuesEnabled": true,
+            "hasIssuesEnabled": false,
             "pushedAt": "2023-03-07T11:00:38Z",
             "defaultBranchRef": {
-              "name": "main"
+              "name": "master"
             },
             "licenseInfo": {
-              "name": "MIT License"
+              "name": "other"
             },
             "branchProtectionRules": {
               "edges": [
                 {
                   "node": {
-                    "isAdminEnforced": true,
-                    "pattern": "main",
-                    "requiredApprovingReviewCount": 1,
-                    "requiresApprovingReviews": true
+                    "isAdminEnforced": false,
+                    "pattern": "master",
+                    "requiredApprovingReviewCount": 0,
+                    "requiresApprovingReviews": false
                   }
                 }
               ]

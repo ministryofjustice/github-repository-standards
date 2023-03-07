@@ -102,7 +102,6 @@ module HelperModule
       # Get Issues used by this application based on the title
       issues = response_json.select { |x| x[:title].include? issue_title }
       if !issues.nil? || !issues&.empty?
-        open_issues = []
         open_issues = issues.select { |x| x[:state] == "open" }
         if open_issues.length > 0
           issue_exists = true

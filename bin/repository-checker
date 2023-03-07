@@ -24,9 +24,10 @@ class RepositoryChecker
 
     #     if repo[:report][:has_require_approvals_enabled] == false
     #       create_require_approvals_issue(repo[:name])
-    #     end 
+    #     end
     #   end
     # end
+
     write_public_data(results)
     write_private_data(results)
   end

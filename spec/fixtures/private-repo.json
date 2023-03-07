@@ -4,7 +4,7 @@
       "repos": [
         {
           "repo": {
-            "name": "some-repo",
+            "name": "test-repo",
             "description": "abc",
             "url": "some-url",
             "isPrivate": true,

@@ -4,7 +4,7 @@
       "repos": [
         {
           "repo": {
-            "name": "some-repo1",
+            "name": "test-repo1",
             "description": "abc",
             "url": "some-url",
             "isPrivate": false,
@@ -34,7 +34,7 @@
         },
         {
           "repo": {
-            "name": "some-repo2",
+            "name": "test-repo2",
             "description": "abc",
             "url": "some-url",
             "isPrivate": false,
