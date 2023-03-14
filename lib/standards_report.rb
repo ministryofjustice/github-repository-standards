@@ -167,7 +167,7 @@ class GithubRepositoryStandards
     # @return [Bool] true if a license is used
     def has_license?
       t = repo_data.dig("repo", "licenseInfo", "name")
-      t.nil? ? false : true
+      !t.nil?
     end
 
     # Return the repository description length
