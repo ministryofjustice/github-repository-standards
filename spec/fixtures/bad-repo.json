@@ -15,9 +15,6 @@
             "defaultBranchRef": {
               "name": "master"
             },
-            "licenseInfo": {
-              "name": "other"
-            },
             "branchProtectionRules": {
               "edges": [
                 {

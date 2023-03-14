@@ -162,19 +162,12 @@ class GithubRepositoryStandards
       default_branch == MAIN_BRANCH
     end
 
-    # Read the license type from the data
+    # Check Standard: have a license on repository
     #
-    # @return [String] the name of the license
-    def get_license
-      t = repo_data.dig("repo", "licenseInfo", "name")
-      t.nil? ? "" : t.downcase
-    end
-
-    # Check Standard: MIT license is used within repository
-    #
-    # @return [Bool] true if MIT license is used
+    # @return [Bool] true if a license is used
     def has_license?
-      get_license.include? "mit"
+      t = repo_data.dig("repo", "licenseInfo", "name")
+      !t.nil?
     end
 
     # Return the repository description length
