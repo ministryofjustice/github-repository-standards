@@ -8,11 +8,11 @@ These checks run on a regular schedule, and sends the results to the [Operations
 
 ## Repositories should:
 
-- be MIT Licensed
+- should be licenced (recommended: [MIT Licence](https://technical-guidance.service.justice.gov.uk/documentation/standards/licencing-software-or-code.html))
 - have `main` as the default branch
-- have non-empty description (shouldn't be null or "")
+- have a non-empty description (shouldn't be null or "")
 - have issues enabled
-- have branch protection on `main`, with:
+- have branch protection enabled on `main`, with:
   1. Require a pull request before merging
   2. Require approvals option and a minimum number of user to approve the pull request.
   3. Include administrators option
